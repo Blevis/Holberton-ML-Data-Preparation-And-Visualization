@@ -20,15 +20,16 @@ def plot_missingness(df):
     plt.figure(figsize=(12, 8))
 
     for i, col in enumerate(df.columns):
-        # y is the column's position where the value is missing, NaN
-        # otherwise. NaN points are not drawn but still make the x-axis
-        # span all rows, even when the DataFrame has no missing values
-        y = np.where(df[col].isnull(), i, np.nan)
-        # Vertical bar marker in matplotlib's default color
-        plt.scatter(df.index, y, marker='|', color='C0')
+        # Positions of the records where this column is missing
+        x = np.where(df[col].isnull())[0]
+        # One vertical bar per missing value, default color (C0)
+        plt.scatter(x, [i] * len(x), marker='|', color='C0')
 
     # Map y-ticks to the DataFrame column names
     plt.yticks(range(len(df.columns)), df.columns)
+    # Fixed limits so the axes don't depend on where the missing values are
+    plt.xlim(-0.05 * len(df), 1.05 * len(df))
+    plt.ylim(-0.5, len(df.columns) - 0.5)
 
     plt.tight_layout()
     plt.show()
