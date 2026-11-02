@@ -23,7 +23,7 @@ def encode_features(df):
     ]
 
     binary_oe = preprocessing.OrdinalEncoder(
-        categories=[['No', 'Yes']] * len(binary_cols)
+        categories=[['No', 'Yes']]
     )
 
     df[binary_cols] = binary_oe.fit_transform(df[binary_cols]).astype(int)
