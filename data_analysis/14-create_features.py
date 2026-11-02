@@ -26,7 +26,7 @@ def create_features(df):
     num_services += (df['InternetService'] != 'No').astype(int)
     df['NumServices'] = num_services
 
-    # Bins are right-inclusive: (0, 12], (12, 24], (24, 48], (48, 60], (60, inf)
+    # Bins right-inclusive: (0, 12], (12, 24], (24, 48], (48, 60], (60, inf)
     df['TenureGroup'] = pd.cut(df['tenure'],
                                bins=[0, 12, 24, 48, 60, float('inf')],
                                labels=['0-12', '13-24', '25-48', '49-60',
