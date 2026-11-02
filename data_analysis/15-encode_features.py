@@ -7,15 +7,15 @@ from sklearn import preprocessing
 
 
 def encode_features(df):
-    """Encode categorical features for machine learning."""
+    """Encode categorical features for modeling."""
 
     df = df.copy()
 
-    # 1. Label encode Churn
+    # Label encode Churn
     churn_le = preprocessing.LabelEncoder()
     df['Churn'] = churn_le.fit_transform(df['Churn'])
 
-    # 2. Ordinal encode binary columns
+    # Ordinal encode binary columns
     binary_cols = [
         'Partner',
         'Dependents',
@@ -24,14 +24,14 @@ def encode_features(df):
     ]
 
     binary_oe = preprocessing.OrdinalEncoder(
-        categories=[['No', 'Yes']]
+        categories=[['No', 'Yes']] * len(binary_cols)
     )
 
     df[binary_cols] = binary_oe.fit_transform(
         df[binary_cols]
     ).astype(int)
 
-    # 3. One-hot encode Contract and PaymentMethod
+    # One-hot encode Contract and PaymentMethod
     df = pd.get_dummies(
         df,
         columns=['Contract', 'PaymentMethod'],
@@ -39,7 +39,7 @@ def encode_features(df):
         dtype=int
     )
 
-    # 4. Ordinal encode TenureGroup alphabetically
+    # Ordinal encode TenureGroup
     tenure_oe = preprocessing.OrdinalEncoder()
 
     df[['TenureGroup']] = tenure_oe.fit_transform(
