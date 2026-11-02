@@ -27,9 +27,8 @@ def plot_missingness(df):
 
     # Map y-ticks to the DataFrame column names
     plt.yticks(range(len(df.columns)), df.columns)
-    # Fixed limits so the axes don't depend on where the missing values are
-    plt.xlim(-0.05 * len(df), 1.05 * len(df))
-    plt.ylim(-0.5, len(df.columns) - 0.5)
+    # X-axis spans all records, even when nothing is missing
+    plt.xlim(0, len(df))
 
     plt.tight_layout()
     plt.show()
