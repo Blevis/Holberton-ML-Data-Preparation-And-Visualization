@@ -11,11 +11,11 @@ def encode_features(df):
 
     df = df.copy()
 
-    # Label encode Churn
+    # 1. Label encode Churn
     churn_le = preprocessing.LabelEncoder()
     df['Churn'] = churn_le.fit_transform(df['Churn'])
 
-    # Ordinal encode binary columns
+    # 2. Ordinal encode binary columns
     binary_cols = [
         'Partner',
         'Dependents',
@@ -24,14 +24,19 @@ def encode_features(df):
     ]
 
     binary_oe = preprocessing.OrdinalEncoder(
-        categories=[['No', 'Yes']] * len(binary_cols)
+        categories=[['No', 'Yes']]
     )
 
-    df[binary_cols] = binary_oe.fit_transform(
-        df[binary_cols]
-    ).astype(int)
+    # Fit on the first binary column
+    binary_oe.fit(df[['Partner']].to_numpy())
 
-    # One-hot encode Contract and PaymentMethod
+    # Transform all binary columns
+    for col in binary_cols:
+        df[[col]] = binary_oe.transform(
+            df[[col]].to_numpy()
+        ).astype(int)
+
+    # 3. One-hot encode Contract and PaymentMethod
     df = pd.get_dummies(
         df,
         columns=['Contract', 'PaymentMethod'],
@@ -39,7 +44,7 @@ def encode_features(df):
         dtype=int
     )
 
-    # Ordinal encode TenureGroup
+    # 4. Ordinal encode TenureGroup
     tenure_oe = preprocessing.OrdinalEncoder()
 
     df[['TenureGroup']] = tenure_oe.fit_transform(
