@@ -1,11 +1,13 @@
+
 #!/usr/bin/env python3
+"""Module for encoding features."""
 
 import pandas as pd
 from sklearn import preprocessing
 
 
 def encode_features(df):
-    """Encode features for modeling."""
+    """Encode categorical features for modeling."""
 
     df = df.copy()
 
@@ -13,7 +15,7 @@ def encode_features(df):
     churn_le = preprocessing.LabelEncoder()
     df['Churn'] = churn_le.fit_transform(df['Churn'])
 
-    # Ordinal encode binary columns
+    # Ordinal encode binary features
     binary_cols = [
         'Partner',
         'Dependents',
@@ -33,11 +35,9 @@ def encode_features(df):
     df = pd.get_dummies(
         df,
         columns=['Contract', 'PaymentMethod'],
-        drop_first=True
+        drop_first=True,
+        dtype=int
     )
-
-    dummy_cols = df.select_dtypes(include=['bool']).columns
-    df[dummy_cols] = df[dummy_cols].astype(int)
 
     # Ordinal encode TenureGroup
     tenure_oe = preprocessing.OrdinalEncoder()
